@@ -6,7 +6,7 @@ import Expenses from './expenses';
 
 function App() {
   const [newName, setNewName] = useState("");
-  const [newAge, setNewAge] = useState(0);
+  const [newAge, setNewAge] = useState();
   const [users, setUsers] = useState([]);
   const [loggedInUser, setLoggedInUser] = useState(null);
   const [showExpenses, setShowExpenses] = useState(false);
@@ -46,7 +46,7 @@ function App() {
 
     await addDoc(usersCollectionRef, { name: newName.trim(), age: Number(newAge), expenses: [], isAdmin: false });
     setNewName("");
-    setNewAge(0);
+    setNewAge();
     getUsers();
   };
 
@@ -123,7 +123,7 @@ function App() {
               onClick={createUser}
               className="w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition"
             >
-              Create User
+              Add User
             </button>
           </div>
 
