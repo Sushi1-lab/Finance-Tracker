@@ -60,7 +60,7 @@ function Expenses({ user, readonly = false }) {
   };
 
   return (
-    <div className="min-h-screen bg-gray-300 flex flex-col items-center p-6">
+    <div className="min-h-screen  flex flex-col items-center p-6">
       {/* Show input form only if not readonly */}
       {!readonly && (
         <form onSubmit={handleSubmit} className="bg-white shadow-lg rounded-lg p-6">
@@ -71,7 +71,7 @@ function Expenses({ user, readonly = false }) {
             { id: 'food', label: 'Food', value: food, setter: setFood },
           ].map(({ id, label, value, setter }) => (
             <div key={id} className="mb-4">
-              <label className="block text-gray-700 mb-2" htmlFor={id}>{label}</label>
+              <label className="block  mb-2" htmlFor={id}>{label}</label>
               <input
                 type="number"
                 id={id}
@@ -102,11 +102,11 @@ function Expenses({ user, readonly = false }) {
 
       {/* Expense History */}
       <div className="mt-6 bg-white p-4 rounded-lg shadow-md">
-        <h2 className="text-xl font-semibold text-gray-800">
+        <h2 className="text-xl font-semibold">
           {readonly ? `${user.name}'s` : "Your"} Expense History
         </h2>
         {userExpenses.length === 0 ? (
-          <p className="text-gray-700">No expenses recorded yet.</p>
+          <p className="">No expenses recorded yet.</p>
         ) : (
           <ul>
             {userExpenses.map((exp, index) => (

@@ -32,7 +32,7 @@ function App() {
         setShowExpenses(true);
       }
     } else {
-      alert("User not found");
+      alert("TANGINAMO MAG GAWA KA MUNA ACCOUNT");
     }
   };
 
@@ -71,9 +71,9 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-300 flex flex-col items-center">
+    <div className="min-h-screen bg-amber-200 flex flex-col items-center">
       {/* Navigation Bar */}
-      <nav className="w-full bg-amber-100 px-4 py-4 shadow-md sticky top-0 z-10">
+      <nav className="w-full bg-amber-100 px-4 py-4 shadow-md sticky top-0 z-10 mb-5">
         <div className="flex items-center justify-between max-w-5xl mx-auto">
           <div className="text-xl font-semibold text-blue-950">
             Welcome, {loggedInUser.name}
@@ -151,9 +151,9 @@ function App() {
         )}
       </nav>
 
-      <h1 className="text-3xl font-bold my-6 text-blue-700">
-        {showExpenses ? "Expenses Calculator" : "User Management"}
-      </h1>
+      <div className="text-3xl font-bold my-6 text-blue-900">
+        {showExpenses ? "Expenses" : "Add User"}
+      </div>
 
       {showExpenses ? (
         <Expenses user={loggedInUser} refreshUsers={getUsers} />
@@ -190,7 +190,7 @@ function App() {
             
             <div className="flex flex-wrap gap-2 mt-4">
               <button
-                className="bg-blue-800 text-white py-1 px-3 rounded hover:bg-green-600 transition"
+                className="bg-blue-800 text-white py-1 px-3 rounded hover:bg-blue-700 transition"
                 onClick={() => updateUser(user.id, user.age)}
               >
                 Increase Age
@@ -202,7 +202,7 @@ function App() {
                 Delete User
               </button>
               <button
-                className="bg-purple-600 text-white py-1 px-3 rounded hover:bg-purple-700 transition"
+                className="bg-blue-800 text-white py-1 px-3 rounded hover:bg-blue-700 transition"
                 onClick={() =>
                   setSelectedUser((prev) => (prev?.id === user.id ? null : user))
                 }
