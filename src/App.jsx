@@ -3,6 +3,7 @@ import { db } from './firebase';
 import { collection, getDocs, addDoc, updateDoc, doc, deleteDoc } from "firebase/firestore";
 import Login from "./Login";
 import Expenses from './expenses';
+import { Menu, X } from "lucide-react";
 
 function App() {
   const [newName, setNewName] = useState("");
@@ -10,6 +11,7 @@ function App() {
   const [users, setUsers] = useState([]);
   const [loggedInUser, setLoggedInUser] = useState(null);
   const [showExpenses, setShowExpenses] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const usersCollectionRef = collection(db, "users");
 
@@ -26,7 +28,6 @@ function App() {
     const user = users.find(u => u.name === name);
     if (user) {
       setLoggedInUser(user);
-      // Automatically redirect non-admins to the Expenses page
       if (!user.isAdmin) {
         setShowExpenses(true);
       }
@@ -37,7 +38,8 @@ function App() {
 
   const handleLogout = () => {
     setLoggedInUser(null);
-    setShowExpenses(false);  // Reset to user management page after logout
+    setShowExpenses(false);
+    setIsMobileMenuOpen(false);
   };
 
   const createUser = async () => {
@@ -67,45 +69,96 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col items-center ">
-      
+    <div className="min-h-screen bg-gray-300 flex flex-col items-center">
       {/* Navigation Bar */}
-      <nav className="font-medium w-full text-xl mx-8 bg-amber-200 p-4 sm:px-8 lg:px-16 flex justify-between items-center rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
-        <h2 className="text-blue-950 text-2xl font-semibold capitalize">Welcome, {loggedInUser.name}</h2>
-        <div className="flex items-center space-x-6">
-          {loggedInUser.isAdmin && (
+      <nav className="w-full bg-amber-100 px-4 py-4 shadow-md sticky top-0 z-10">
+        <div className="flex items-center justify-between max-w-5xl mx-auto">
+          <div className="text-xl font-semibold text-blue-950">
+            Welcome, {loggedInUser.name}
+          </div>
+
+          {/* Desktop Menu */}
+          <div className="hidden md:flex space-x-6 text-blue-950 font-medium text-xl ">
+            {loggedInUser.isAdmin && (
+              <button
+                onClick={() => setShowExpenses(false)}
+                className="hover:text-blue-700 transition"
+              >
+                Users
+              </button>
+            )} <div></div>
             <button
-              onClick={() => setShowExpenses(false)}
-              className={`text-blue-950 hover:text-blue-700 transition-colors duration-200 `}
+              onClick={() => setShowExpenses(true)}
+              className="hover:text-blue-700 transition"
             >
-              User Management
+              Expenses
+            </button> <div></div>
+            <button
+              onClick={handleLogout}
+              className="hover:text-blue-700 transition"
+            >
+              Logout
             </button>
-          )}
-          <div></div>
+          </div>
+
+          {/* Burger Menu Icon */}
           <button
-            onClick={() => setShowExpenses(true)}
-            className={`text-blue-950 hover:text-blue-700 transition-colors duration-200`}
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="md:hidden text-blue-950"
           >
-            Expenses
-          </button>
-          <div></div>
-          <button
-            onClick={handleLogout}
-            className="text-blue-950 ml-4 hover:text-blue-700 transition-colors duration-200"
-          >
-            Logout
+            {isMobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
           </button>
         </div>
+
+        {/* Mobile Menu */}
+        {isMobileMenuOpen && (
+          <div
+            className={`md:hidden overflow-hidden transition-all duration-500 ease-in-out ${
+              isMobileMenuOpen ? "max-h-60 mt-4" : "max-h-0"
+            }`}
+          >
+            <div className="flex flex-col space-y-2 text-blue-950 font-medium px-4">
+              {loggedInUser.isAdmin && (
+                <button
+                  onClick={() => {
+                    setShowExpenses(false);
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className="hover:text-blue-700 transition"
+                >
+                  Users
+                </button>
+              )}
+              <button
+                onClick={() => {
+                  setShowExpenses(true);
+                  setIsMobileMenuOpen(false);
+                }}
+                className="hover:text-blue-700 transition"
+              >
+                Expenses
+              </button>
+              <button
+                onClick={handleLogout}
+                className="hover:text-blue-700 transition"
+              >
+                Logout
+              </button>
+            </div>
+          </div>
+        )}
       </nav>
 
-      <h1 className="text-3xl font-bold mb-6 text-blue-700">{showExpenses ? "Expenses Calculator" : "User Management"}</h1>
+      <h1 className="text-3xl font-bold my-6 text-blue-700">
+        {showExpenses ? "Expenses Calculator" : "User Management"}
+      </h1>
 
       {showExpenses ? (
         <Expenses user={loggedInUser} refreshUsers={getUsers} />
       ) : loggedInUser.isAdmin ? (
         <>
           {/* User Management Form */}
-          <div className="bg-white shadow-lg rounded-lg p-6 w-full max-w-md mb-8">
+          <div className="bg-amber-100 shadow-lg rounded-lg p-6 w-full max-w-md mb-8">
             <input
               className="w-full p-2 mb-4 border rounded-md"
               placeholder="Name"
@@ -121,27 +174,25 @@ function App() {
             />
             <button
               onClick={createUser}
-              className="w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition"
+              className="w-full bg-blue-800 text-white py-2 px-4 rounded hover:bg-blue-700 transition"
             >
               Create User
             </button>
           </div>
 
-          {/* Users List */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full max-w-4xl">
             {users.map((user) => (
-              <div key={user.id} className="bg-white shadow-md rounded-lg p-4">
+              <div key={user.id} className="bg-amber-100 shadow-md rounded-lg p-4">
                 <h2 className="text-xl font-semibold">{user.name}</h2>
                 <p className="text-gray-700">Age: {user.age}</p>
                 <button
-                  className="mt-4 mr-2 bg-green-500 text-white py-1 px-3 rounded hover:bg-green-600 transition"
+                  className="mt-4 mr-2 bg-blue-800 text-white py-1 px-3 rounded hover:bg-green-600 transition"
                   onClick={() => updateUser(user.id, user.age)}
                 >
                   Increase Age
-                </button>
-                <div></div>
+                </button> <div></div>
                 <button
-                  className="mt-4 bg-red-500 text-white py-1 px-3 rounded hover:bg-red-600 transition"
+                  className="mt-4 ml-2 bg-red-500 text-white py-1 px-3 rounded hover:bg-red-600 transition"
                   onClick={() => deleteUser(user.id)}
                 >
                   Delete User
@@ -151,7 +202,9 @@ function App() {
           </div>
         </>
       ) : (
-        <p className="text-red-600 font-semibold text-lg">You are not authorized to access User Management.</p>
+        <p className="text-red-600 font-semibold text-lg">
+          You are not authorized to access User Management.
+        </p>
       )}
     </div>
   );

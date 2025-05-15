@@ -60,8 +60,8 @@ function Expenses({ user }) {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col items-center p-6">
-      <form onSubmit={handleSubmit} className="bg-white shadow-lg rounded-lg p-6 w-full max-w-md">
+    <div className="min-h-screen bg-gray-300 flex flex-col items-center p-6">
+      <form onSubmit={handleSubmit} className="bg-white shadow-lg rounded-lg p-6">
         {[
           { id: 'transportation', label: 'Transportation', value: transportation, setter: setTransportation },
           { id: 'bills', label: 'Bills', value: bills, setter: setBills },
@@ -86,17 +86,17 @@ function Expenses({ user }) {
           className="w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition"
         >
           Calculate Total Expenses
-        </button>
+        </button> 
       </form>
 
       {total !== null && (
-        <div className="mt-6 bg-white p-4 rounded-lg shadow-md w-full max-w-md">
+        <div className="mt-6 bg-white p-4 rounded-lg shadow-md ">
           <h2 className="text-xl font-semibold text-gray-800">Total Monthly Expenses</h2>
           <p className="text-lg text-gray-700">Your total expenses are: <strong>${total}</strong></p>
         </div>
       )}
 
-      <div className="mt-6 bg-white p-4 rounded-lg shadow-md w-full max-w-md">
+      <div className="mt-6 bg-white p-4 rounded-lg shadow-md">
         <h2 className="text-xl font-semibold text-gray-800">Your Expense History</h2>
         {userExpenses.length === 0 ? (
           <p className="text-gray-700">No expenses recorded yet.</p>

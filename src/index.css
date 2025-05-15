@@ -3,6 +3,6 @@
 @tailwind components;
 @tailwind utilities;
 
-.root {
-    background: #000;
+.html{
+    animation-delay: unset;
 }
