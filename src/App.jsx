@@ -58,6 +58,8 @@ function App() {
     getUsers();
   };
 
+  const [selectedUser, setSelectedUser] = useState(null);
+
   const deleteUser = async (id) => {
     const userDoc = doc(db, "users", id);
     await deleteDoc(userDoc);
@@ -181,24 +183,41 @@ function App() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full max-w-4xl">
-            {users.map((user) => (
-              <div key={user.id} className="bg-amber-100 shadow-md rounded-lg p-4">
-                <h2 className="text-xl font-semibold">{user.name}</h2>
-                <p className="text-gray-700">Age: {user.age}</p>
-                <button
-                  className="mt-4 mr-2 bg-blue-800 text-white py-1 px-3 rounded hover:bg-green-600 transition"
-                  onClick={() => updateUser(user.id, user.age)}
-                >
-                  Increase Age
-                </button> <div></div>
-                <button
-                  className="mt-4 ml-2 bg-red-500 text-white py-1 px-3 rounded hover:bg-red-600 transition"
-                  onClick={() => deleteUser(user.id)}
-                >
-                  Delete User
-                </button>
-              </div>
-            ))}
+          {users.map((user) => (
+          <div key={user.id} className="bg-amber-100 shadow-md rounded-lg p-4">
+            <h2 className="text-xl font-semibold">{user.name}</h2>
+            <p className="text-gray-700">Age: {user.age}</p>
+            
+            <div className="flex flex-wrap gap-2 mt-4">
+              <button
+                className="bg-blue-800 text-white py-1 px-3 rounded hover:bg-green-600 transition"
+                onClick={() => updateUser(user.id, user.age)}
+              >
+                Increase Age
+              </button>
+              <button
+                className="bg-red-500 text-white py-1 px-3 rounded hover:bg-red-600 transition"
+                onClick={() => deleteUser(user.id)}
+              >
+                Delete User
+              </button>
+              <button
+                className="bg-purple-600 text-white py-1 px-3 rounded hover:bg-purple-700 transition"
+                onClick={() =>
+                  setSelectedUser((prev) => (prev?.id === user.id ? null : user))
+                }
+              >
+                {selectedUser?.id === user.id ? "Hide Expenses" : "View Expenses"}
+              </button>
+            </div>
+
+            {selectedUser?.id === user.id && (
+            <div className="mt-4">
+              <Expenses user={user} readonly={true} />
+            </div>
+          )}
+          </div>
+        ))}
           </div>
         </>
       ) : (

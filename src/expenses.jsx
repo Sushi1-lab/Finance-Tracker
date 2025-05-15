@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { db } from './firebase';
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 
-function Expenses({ user }) {
+function Expenses({ user, readonly = false }) {
   const [transportation, setTransportation] = useState();
   const [bills, setBills] = useState();
   const [rent, setRent] = useState();
@@ -61,43 +61,50 @@ function Expenses({ user }) {
 
   return (
     <div className="min-h-screen bg-gray-300 flex flex-col items-center p-6">
-      <form onSubmit={handleSubmit} className="bg-white shadow-lg rounded-lg p-6">
-        {[
-          { id: 'transportation', label: 'Transportation', value: transportation, setter: setTransportation },
-          { id: 'bills', label: 'Bills', value: bills, setter: setBills },
-          { id: 'rent', label: 'Rent', value: rent, setter: setRent },
-          { id: 'food', label: 'Food', value: food, setter: setFood },
-        ].map(({ id, label, value, setter }) => (
-          <div key={id} className="mb-4">
-            <label className="block text-gray-700 mb-2" htmlFor={id}>{label}</label>
-            <input
-              type="number"
-              id={id}
-              className="w-full p-2 border rounded-md"
-              value={value}
-              onChange={(e) => setter(Number(e.target.value))}
-              placeholder={`Enter ${label.toLowerCase()} expense`}
-            />
-          </div>
-        ))}
+      {/* Show input form only if not readonly */}
+      {!readonly && (
+        <form onSubmit={handleSubmit} className="bg-white shadow-lg rounded-lg p-6">
+          {[
+            { id: 'transportation', label: 'Transportation', value: transportation, setter: setTransportation },
+            { id: 'bills', label: 'Bills', value: bills, setter: setBills },
+            { id: 'rent', label: 'Rent', value: rent, setter: setRent },
+            { id: 'food', label: 'Food', value: food, setter: setFood },
+          ].map(({ id, label, value, setter }) => (
+            <div key={id} className="mb-4">
+              <label className="block text-gray-700 mb-2" htmlFor={id}>{label}</label>
+              <input
+                type="number"
+                id={id}
+                className="w-full p-2 border rounded-md"
+                value={value}
+                onChange={(e) => setter(Number(e.target.value))}
+                placeholder={`Enter ${label.toLowerCase()} expense`}
+              />
+            </div>
+          ))}
 
-        <button
-          type="submit"
-          className="w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition"
-        >
-          Calculate Total Expenses
-        </button> 
-      </form>
+          <button
+            type="submit"
+            className="w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition"
+          >
+            Calculate Total Expenses
+          </button>
+        </form>
+      )}
 
-      {total !== null && (
+      {/* Only show total if calculated */}
+      {total !== null && !readonly && (
         <div className="mt-6 bg-white p-4 rounded-lg shadow-md ">
           <h2 className="text-xl font-semibold text-gray-800">Total Monthly Expenses</h2>
           <p className="text-lg text-gray-700">Your total expenses are: <strong>${total}</strong></p>
         </div>
       )}
 
+      {/* Expense History */}
       <div className="mt-6 bg-white p-4 rounded-lg shadow-md">
-        <h2 className="text-xl font-semibold text-gray-800">Your Expense History</h2>
+        <h2 className="text-xl font-semibold text-gray-800">
+          {readonly ? `${user.name}'s` : "Your"} Expense History
+        </h2>
         {userExpenses.length === 0 ? (
           <p className="text-gray-700">No expenses recorded yet.</p>
         ) : (
