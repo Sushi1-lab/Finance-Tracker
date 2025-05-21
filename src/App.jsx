@@ -32,7 +32,7 @@ function App() {
         setShowExpenses(true);
       }
     } else {
-      alert("TANGINAMO MAG GAWA KA MUNA ACCOUNT");
+      alert("The Account is not existing");
     }
   };
 
@@ -71,9 +71,9 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-amber-200 flex flex-col items-center">
+    <div className=" bg-[url(bg3.jpg)] bg-no-repeat bg-cover bg-center min-h-screen flex flex-col items-center">
       {/* Navigation Bar */}
-      <nav className="w-full bg-amber-100 px-4 py-4 shadow-md sticky top-0 z-10 mb-5">
+      <nav className="w-full bg-white px-4 py-4 shadow-md sticky top-0 z-10 mb-5">
         <div className="flex items-center justify-between max-w-5xl mx-auto">
           <div className="text-xl font-semibold text-blue-950">
             Welcome, {loggedInUser.name}
@@ -151,7 +151,7 @@ function App() {
         )}
       </nav>
 
-      <div className="text-3xl font-bold my-6 text-blue-900">
+      <div className="text-3xl font-bold my-6 text-white">
         {showExpenses ? "Expenses" : "Add User"}
       </div>
 
@@ -160,7 +160,7 @@ function App() {
       ) : loggedInUser.isAdmin ? (
         <>
           {/* User Management Form */}
-          <div className="bg-amber-100 shadow-lg rounded-lg p-6 w-full max-w-md mb-8">
+          <div className="bg-white shadow-lg rounded-lg p-6 w-full max-w-md mb-8">
             <input
               className="w-full p-2 mb-4 border rounded-md"
               placeholder="Name"
@@ -184,7 +184,7 @@ function App() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full max-w-4xl">
           {users.map((user) => (
-          <div key={user.id} className="bg-amber-100 shadow-md rounded-lg p-4">
+          <div key={user.id} className="bg-white shadow-md rounded-lg p-4">
             <h2 className="text-xl font-semibold">{user.name}</h2>
             <p className="text-gray-700">Age: {user.age}</p>
             
